@@ -10,28 +10,30 @@
     </div>
     <div class="videos-container">
       <div class="divider"></div>   
+      <VideoContainer />
     </div>
   </div>
 </template>
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
+import VideoContainer from './components/VideoContainer.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    HelloWorld,
+    VideoContainer
   }
 }
 </script>
 
 <style>
  * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        
-      }
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    }
       body {
         background: #f9f9f9;
         padding: 2rem 4rem;
@@ -71,25 +73,5 @@ export default {
       height: 1px;
       margin: 2.5rem 7rem 1.5rem 7rem;
      }
-     .video-container {
-       display: flex;
-       margin: 0rem 7rem;
-       margin-top: 1rem;
-     }
-     .video-thumbnail-container {
-       outline: 1px solid orange;
-       margin-right: 1rem;
-     }
-    .video-thumbnail{
-       height: 202px;
-    }
-
-     .video-data-container {
-       width: 600px;
-       height: auto;
-       outline: 1px solid orange;
-     }
-     .video-title {
-      font-size: 1.8rem;
-     }
+     
 </style>
