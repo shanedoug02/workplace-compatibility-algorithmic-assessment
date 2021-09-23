@@ -1,15 +1,14 @@
 <template>
 	<div>
-		<div v-for="obj of jsonData" :key="obj.id" :id="obj.id" class="video-container">
+		<div v-for="video of slicedVideosArr" :key="video" class="video-container">
 			<div class="video-thumbnail-container">
-				{{ obj.name }}
-				<!-- :id="video.id.videoId" -->
-				<!-- <object data='https://www.youtube.com/embed/${video.id.videoId}?autoplay=1'  height='202px'></object> -->
+				<img :src="video.snippet.thumbnails.high.url" alt="" />
+
+				<!-- <object data="https://www.youtube.com/embed/q6sHNLmYbAM?autoplay=1" height="202px"></object> -->
 			</div>
 			<div class="video-data-container">
 				<div class="video-title">
-					temp
-					<!-- {{video.snippet.title}} -->
+					{{ video.snippet.title }}
 				</div>
 			</div>
 		</div>
@@ -21,29 +20,37 @@ export default {
 	name: 'VideoContainer',
 	data() {
 		return {
-			jsonData: {},
-			categories: [],
+			allVideosArrData: [], // searching for a topic on Youtube returns related videos/data. BUT the videos category id's are not included.  You need to plug in a specific video id to get that video's categoryId number.
+			slicedVideosArr: [],
+			videoCategoriesArr: [],
 		};
 	},
+
 	methods: {
-		setJson(payload) {
-			this.jsonData = payload;
+		requestIdCategory(arr) {
+			arr.forEach((element) => {
+				fetch(`https://youtube.googleapis.com/youtube/v3/videos?part=snippet&id=${element.id.videoId}&key=AIzaSyAP_2CK1-y8YPJCJ61Vf0iJXfZCg1ppxHY`)
+					.then((response) => response.json())
+					.then((rawDataFromEachVideoId) => {
+						this.videoCategoriesArr.push(rawDataFromEachVideoId.items[0].snippet.categoryId);
+						console.log('this is the list of ids', this.videoCategoriesArr);
+					});
+			});
 		},
 	},
 	mounted() {
-		fetch('https://jsonplaceholder.typicode.com/users')
+		fetch('https://www.googleapis.com/youtube/v3/search?part=snippet&q=cat&maxResults=50&key=AIzaSyAP_2CK1-y8YPJCJ61Vf0iJXfZCg1ppxHY')
 			.then((response) => response.json())
-			.then((json) => {
-				console.log(json);
-				this.setJson(json);
+			.then((rawJson) => {
+				this.allVideosArrData = rawJson.items;
+				console.log('this is Allllllllllllll the raw JSON', this.allVideosArrData);
+				this.slicedVideosArr = rawJson.items.slice(0, 5);
+				console.log('this is the jsonData sliced', this.slicedVideosArr);
 			});
 	},
 	computed: {},
-	updated: function() {
-		this.$nextTick(function() {
-			this.categories.push(this.jsonData[0].email, this.jsonData[1].email);
-			console.log(this.categories);
-		});
+	updated() {
+		this.requestIdCategory(this.allVideosArrData);
 	},
 };
 </script>
