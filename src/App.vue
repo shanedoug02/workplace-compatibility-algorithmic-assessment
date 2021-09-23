@@ -11,6 +11,7 @@
     <div class="videos-container">
       <div class="divider"></div>   
       <VideoContainer />
+      
     </div>
   </div>
 </template>
