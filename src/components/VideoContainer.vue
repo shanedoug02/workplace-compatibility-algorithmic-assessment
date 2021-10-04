@@ -22,23 +22,40 @@ export default {
 		return {
 			allVideosArrData: [], // searching for a topic on Youtube returns related videos/data. BUT the videos category id's are not included.  You need to plug in a specific video id to get that video's categoryId number.
 			slicedVideosArr: [],
-			videoCategoriesArr: [],
+			videoCategoryStringsArr: [],
+			videoCategoryNumbersArr: [],
 		};
 	},
 
 	methods: {
 		requestIdCategory(arr) {
+			//this second API request sends each videos ID to get back each video category ID
 			arr.forEach((element) => {
 				fetch(`https://youtube.googleapis.com/youtube/v3/videos?part=snippet&id=${element.id.videoId}&key=AIzaSyAP_2CK1-y8YPJCJ61Vf0iJXfZCg1ppxHY`)
 					.then((response) => response.json())
 					.then((rawDataFromEachVideoId) => {
-						this.videoCategoriesArr.push(rawDataFromEachVideoId.items[0].snippet.categoryId);
-						console.log('this is the list of ids', this.videoCategoriesArr);
+						this.videoCategoryStringsArr.push(rawDataFromEachVideoId.items[0].snippet.categoryId);
+						this.stringToNum(this.videoCategoryStringsArr);
+						console.log('THESE ARE ALL THE VIDEO CATEGORY IDS', this.videoCategoryNumbersArr);
 					});
 			});
 		},
+		stringToNum(arr) {
+			// the videoCategoriesArr values begin as strings.  Here they are converted to numbers
+			arr.forEach((element) => {
+				let toNum = null;
+				toNum = Number(element);
+				this.videoCategoryNumbersArr.push(toNum);
+			});
+		},
+		createSeamlessUrl() {
+			for (let video of this.slicedVideosArr) {
+				console.log(video);
+			}
+		},
 	},
 	mounted() {
+		//This first API request fetchs 50 YouTube videos and renders 5 to the DOM
 		fetch('https://www.googleapis.com/youtube/v3/search?part=snippet&q=cat&maxResults=50&key=AIzaSyAP_2CK1-y8YPJCJ61Vf0iJXfZCg1ppxHY')
 			.then((response) => response.json())
 			.then((rawJson) => {
