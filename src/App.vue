@@ -3,8 +3,8 @@
 		<div class="header">
 			<img src="./assets/youtubeLogo.png" width="90" height="20" alt="Youtube Logo" />
 			<div class="form-container">
-				<form action="">
-					<input type="text" placeholder="Search" class="search-box" />
+				<form v-on:submit.prevent="log">
+					<input v-model="search" type="text" placeholder="Search" class="search-box" />
 				</form>
 			</div>
 		</div>
@@ -22,6 +22,16 @@ export default {
 	name: 'App',
 	components: {
 		VideoContainer,
+	},
+	data() {
+		return {
+			search: '',
+		};
+	},
+	methods: {
+		log() {
+			console.log(this.search);
+		},
 	},
 };
 </script>
