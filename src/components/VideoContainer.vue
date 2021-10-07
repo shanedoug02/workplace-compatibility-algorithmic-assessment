@@ -1,10 +1,8 @@
 <template>
 	<div>
 		<div v-for="video of slicedVideosArr" :key="video" class="video-container">
-			<div class="video-thumbnail-container">
-				<img :src="video.snippet.thumbnails.high.url" alt="" />
-
-				<!-- <object data="https://www.youtube.com/embed/q6sHNLmYbAM?autoplay=1" height="202px"></object> -->
+			<div ref="thumbnail" class="video-thumbnail-container">
+				<iframe id="frame" :src="`https://www.youtube.com/embed/${video.id.videoId}?autoplay=1`" height="202"></iframe>
 			</div>
 			<div class="video-data-container">
 				<div class="video-title">
@@ -29,7 +27,7 @@ export default {
 
 	methods: {
 		requestIdCategory(arr) {
-			//This is the second API request (first API request is @ mounted()). It sends each video ID to get back each video CATEGORY ID
+			//This is the second API request (first API request is @ mounted). This request sends each video ID to get back each video CATEGORY ID
 			arr.forEach((element) => {
 				fetch(`https://youtube.googleapis.com/youtube/v3/videos?part=snippet&id=${element.id.videoId}&key=AIzaSyAP_2CK1-y8YPJCJ61Vf0iJXfZCg1ppxHY`)
 					.then((response) => response.json())
@@ -61,7 +59,10 @@ export default {
 		//need to plug in a seamless object tag????????
 		createSeamlessUrl() {
 			for (let video of this.slicedVideosArr) {
-				console.log(video);
+				console.log('from seamless', video);
+				let html = `<object data="https://www.youtube.com/embed/${video.id.videoId}?autoplay=1" height="202px"></object>`;
+				console.log('this is the thumbnail', this.$refs.thumbnail);
+				this.$refs.thumbnail.append(html);
 			}
 		},
 	},
@@ -76,6 +77,7 @@ export default {
 				console.log('this is the jsonData sliced', this.slicedVideosArr);
 			});
 	},
+
 	computed: {},
 	updated() {
 		this.requestIdCategory(this.allVideosArrData);
